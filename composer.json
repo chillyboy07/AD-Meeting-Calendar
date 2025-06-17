@@ -1,0 +1,14 @@
+{
+    "name": "chillyboy07/ad-meeting-calendar",
+    "type": "project",
+    "authors": [
+        {
+            "name": "chillyboy07",
+            "email": "bonneviechilly@gmail.com"
+        }
+    ],
+    "scripts": {
+        "start": "php -S localhost:8000 router.php"
+    },
+    "require": {}
+}
