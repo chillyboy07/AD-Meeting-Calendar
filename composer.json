@@ -7,8 +7,11 @@
             "email": "bonneviechilly@gmail.com"
         }
     ],
-    "scripts": {
-        "start": "php -S localhost:8000 router.php"
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
     },
-    "require": {}
+    "scripts": {
+        "postgresql:reset": "php utils/dbResetPostgresql.util.php"
+}
+
 }
