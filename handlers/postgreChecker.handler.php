@@ -1,19 +1,16 @@
 <?php
 
-$host = "host.docker.internal";
-$port = "5112";
-$username = "user";
-$password = "password";
-$dbname = "bonneviedatabase";
+require_once __DIR__ . '/../utils/envSetter.util.php';
 
-$conn_string = "host=$host port=$port dbname=$dbname user=$username password=$password";
+$pgConfig = $typeConfig['postgres'];
 
-$dbconn = pg_connect($conn_string);
+// Use localhost when running outside Docker (Windows)
+$host = PHP_OS_FAMILY === 'Windows' ? 'localhost' : $pgConfig['host'];
 
-if (!$dbconn) {
-    echo "❌ Connection Failed: ", pg_last_error() . "  <br>";
-    exit();
+$conn = pg_connect("host={$host} port={$pgConfig['port']} dbname={$pgConfig['db']} user={$pgConfig['user']} password={$pgConfig['pass']}");
+
+if ($conn) {
+    echo "✅ PostgreSQL Connection";
 } else {
-    echo "✔️ PostgreSQL Connection  <br>";
-    pg_close($dbconn);
+    echo "❌ Connection Failed: " . pg_last_error();
 }
