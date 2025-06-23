@@ -6,14 +6,14 @@
 <div align="center">
   <a href="https://github.com/chillyboy07/">
   <!-- TODO: If you want to add logo or banner you can add it here -->
-    <img src="./assets/img/logo.png" alt="AchillesMusicStore" width="190" height="190">
+    <img src="./assets/img/logocalendar.png" alt="AchillesMusicStore" width="180" height="180">
   </a>
 <!-- TODO: Change Title to the name of the title of your Project -->
-  <h3 align="center">ACHILLES MUSIC STORE</h3>
+  <h3 align="center">MEETING CALENDAR</h3>
 </div>
 <!-- TODO: Make a short description -->
 <div align="center">
-  Your neighborhood hub for all things music—offering a curated selection of instruments, accessories, and gear for musicians.
+  A Meeting Calendar web app built with PHP and integrated with databases for efficient scheduling and tracking.
 </div>
 
 <br />
@@ -61,15 +61,15 @@
 <!-- TODO: To be changed -->
 <!-- The following are just sample -->
 
-Achilles Music Store is your one-stop shop for quality musical instruments and accessories. Whether you're hunting for your first guitar, upgrading your audio gear, or stocking up on essentials, our website makes it easy to browse, choose, and purchase with confidence. Explore top brands, trusted service, and everything you need to sound your best—all in one place.
+This project blends PHP with front-end tech like HTML, CSS, and JavaScript, backed by MongoDB or PostgreSQL, ensuring scalability and modern development workflows.
 
 ### Key Components
 
 <!-- TODO: List of Key Components -->
 <!-- The following are just sample -->
 
-- Online Storefront
-- Management Dashboard
+- Meeting Management: Organize, update, and monitor meetings with ease.
+- Dockerized Environment: Streamlined setup and deployment using Docker containers.
 
 ### Technology
 
