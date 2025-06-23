@@ -1,62 +1,45 @@
 <?php
 declare(strict_types=1);
 
-// 1) Composer autoload
-require 'vendor/autoload.php';
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR);
+}
 
-// 2) Composer bootstrap (optional, only if you use it)
-// require 'bootstrap.php';
+require BASE_PATH . 'vendor/autoload.php';
 
-// 3) Load environment variables
-require_once __DIR__ . '/envSetter.util.php';
+if (file_exists(BASE_PATH . 'bootstrap.php')) {
+    require BASE_PATH . 'bootstrap.php';
+}
 
-$pgConfig = $typeConfig['postgres'];
+require_once BASE_PATH . 'utils/envSetter.util.php';
 
-// ——— Connect to PostgreSQL ———
+// Connect to PostgreSQL
 $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-try {
-    $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    ]);
-    echo "✅ Connected to PostgreSQL.\n";
-} catch (PDOException $e) {
-    die("❌ PostgreSQL connection failed: " . $e->getMessage() . "\n");
-}
+$pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+]);
 
-// ——— Truncate tables ———
-echo "Truncating tables…\n";
-$tables = ['meeting_users', 'tasks', 'meetings', 'users'];
-
-foreach ($tables as $table) {
-    try {
-        $pdo->exec("TRUNCATE TABLE {$table} RESTART IDENTITY CASCADE;");
-        echo "✅ Truncated {$table}\n";
-    } catch (PDOException $e) {
-        echo "❌ Failed to truncate {$table}: " . $e->getMessage() . "\n";
-    }
-}
-
-// ——— Apply SQL schema files ———
-$schemas = [
+echo "Applying schema files...\n";
+$schemaFiles = [
     'database/user.model.sql',
     'database/meeting.model.sql',
     'database/meeting_users.model.sql',
-    'database/tasks.model.sql',
+    'database/tasks.model.sql'
 ];
 
-foreach ($schemas as $schemaPath) {
-    echo "Applying schema from {$schemaPath}…\n";
-    $sql = file_get_contents($schemaPath);
-
+foreach ($schemaFiles as $file) {
+    echo "Applying $file...\n";
+    $sql = file_get_contents($file);
     if ($sql === false) {
-        echo "❌ Could not read {$schemaPath}\n";
-        continue;
+        throw new RuntimeException("❌ Could not read $file");
     }
-
-    try {
-        $pdo->exec($sql);
-        echo "✅ Successfully applied {$schemaPath}\n";
-    } catch (PDOException $e) {
-        echo "❌ Error applying {$schemaPath}: " . $e->getMessage() . "\n";
-    }
+    $pdo->exec($sql);
 }
+
+echo "Truncating tables…\n";
+$tables = ['meeting_users', 'tasks', 'meetings', 'users'];
+foreach ($tables as $table) {
+    $pdo->exec("TRUNCATE TABLE {$table} RESTART IDENTITY CASCADE;");
+}
+
+echo "✅ Tables reset successfully.\n";
