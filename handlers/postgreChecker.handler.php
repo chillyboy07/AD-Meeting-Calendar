@@ -1,16 +1,27 @@
 <?php
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', realpath(dirname(__DIR__)));
+}
 
-require_once __DIR__ . '/../utils/envSetter.util.php';
+if (!defined('UTILS_PATH')) {
+    define('UTILS_PATH', BASE_PATH . '/utils/');
+}
 
-$pgConfig = $typeConfig['postgres'];
+require_once UTILS_PATH . 'envSetter.util.php';
 
-// Use localhost when running outside Docker (Windows)
-$host = PHP_OS_FAMILY === 'Windows' ? 'localhost' : $pgConfig['host'];
+$host = $pgConfig['host'];
+$port = $pgConfig['port'];
+$dbname = $pgConfig['db'];
+$username = $pgConfig['user'];
+$password = $pgConfig['pass'];
 
-$conn = pg_connect("host={$host} port={$pgConfig['port']} dbname={$pgConfig['db']} user={$pgConfig['user']} password={$pgConfig['pass']}");
+$conn_string = "host=$host port=$port dbname=$dbname user=$username password=$password";
+$dbconn = pg_connect($conn_string);
 
-if ($conn) {
-    echo "✅ PostgreSQL Connection";
+if (!$dbconn) {
+    echo "❌ Connection Failed: " . pg_last_error() . "  <br>";
+    exit();
 } else {
-    echo "❌ Connection Failed: " . pg_last_error();
+    echo "✔️ PostgreSQL Connection Successful <br>";
+    pg_close($dbconn);
 }
